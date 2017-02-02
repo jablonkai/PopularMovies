@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="action_sort_popular">Sort by popularity</string>
+    <string name="action_sort_rated">Sort by ratings</string>
+    <string name="error_message">Please connect to the internet!</string>
+    <string name="action_sort_by">Sort by</string>
+    <string name="release_date">Release Date</string>
+    <string name="detail_activity_title">Movie Detail</string>
+    <string name="main_activity_title_popular">Most Popular Movies</string>
+    <string name="main_activity_rate">Top Rated Movies</string>
+</resources>
