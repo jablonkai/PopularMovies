@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         all {
-            it.buildConfigField "String", 'MOVIEDB_ORG_API_KEY', "\"3b27a387b5525a53c91a81eb6bed0375\""
+            it.buildConfigField "String", 'MOVIEDB_ORG_API_KEY', "\"\""
         }
         release {
             minifyEnabled false
@@ -30,6 +30,7 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.android.support:recyclerview-v7:25.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 

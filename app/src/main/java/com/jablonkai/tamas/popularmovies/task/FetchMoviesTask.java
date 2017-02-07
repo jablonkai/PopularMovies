@@ -1,9 +1,10 @@
-package com.jablonkai.tamas.popularmovies;
+package com.jablonkai.tamas.popularmovies.task;
 
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.jablonkai.tamas.popularmovies.adapter.MoviePosterAdapter;
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.utils.NetworkUtils;
 import com.jablonkai.tamas.popularmovies.utils.TheMovieDbJsonUtils;
@@ -44,7 +45,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]> {
         try {
             String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(moviesRequestUrl);
 
-            return TheMovieDbJsonUtils.getMoviesDbFromJson(this, jsonMoviesResponse);
+            return TheMovieDbJsonUtils.getMoviesDbFromJson(jsonMoviesResponse);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

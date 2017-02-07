@@ -5,39 +5,27 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable {
 
+    private long id;
     private String originalTitle;
     private String posterPath;
-    private String overview;
-    private double voteAverage;
-    private long voteCount;
-    private long releaseDate;
 
-    public Movie(String originalTitle, String posterPath, String overview, double voteAverage, long voteCount, long releaseDate) {
+    public Movie(long id, String originalTitle, String posterPath) {
+        this.id = id;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
-        this.overview = overview;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
-        this.releaseDate = releaseDate;
     }
 
     public Movie(Parcel in) {
+        id = in.readLong();
         originalTitle = in.readString();
         posterPath = in.readString();
-        overview = in.readString();
-        voteAverage = in.readDouble();
-        voteCount = in.readLong();
-        releaseDate = in.readLong();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(originalTitle);
         dest.writeString(posterPath);
-        dest.writeString(overview);
-        dest.writeDouble(voteAverage);
-        dest.writeLong(voteCount);
-        dest.writeLong(releaseDate);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
@@ -55,6 +43,14 @@ public class Movie implements Parcelable {
         return 0;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getOriginalTitle() {
         return originalTitle;
     }
@@ -69,37 +65,5 @@ public class Movie implements Parcelable {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public double getVoteAverage() {
-        return voteAverage;
-    }
-
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
-    public long getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(long voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public long getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(long releaseDate) {
-        this.releaseDate = releaseDate;
     }
 }

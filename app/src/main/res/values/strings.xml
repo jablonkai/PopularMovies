@@ -8,4 +8,7 @@
     <string name="detail_activity_title">Movie Detail</string>
     <string name="main_activity_title_popular">Most Popular Movies</string>
     <string name="main_activity_rate">Top Rated Movies</string>
+    <string name="content_authority">com.jablonkai.tamas.popularmovies</string>
+    <string name="tv_trailers">Trailers</string>
+    <string name="tv_reviews">Reviews</string>
 </resources>

@@ -14,7 +14,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.jablonkai.tamas.popularmovies.adapter.MoviePosterAdapter;
 import com.jablonkai.tamas.popularmovies.data.Movie;
+import com.jablonkai.tamas.popularmovies.task.FetchMoviesTask;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -40,10 +42,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setTitle(mTitlePopular);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_PORTRAIT)

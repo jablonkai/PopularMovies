@@ -1,4 +1,4 @@
-package com.jablonkai.tamas.popularmovies;
+package com.jablonkai.tamas.popularmovies.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jablonkai.tamas.popularmovies.R;
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.utils.NetworkUtils;
 
@@ -50,7 +51,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         }
     }
 
-    MoviePosterAdapter(MoviePosterAdapterClickHandler clickHandler) {
+    public MoviePosterAdapter(MoviePosterAdapterClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 
