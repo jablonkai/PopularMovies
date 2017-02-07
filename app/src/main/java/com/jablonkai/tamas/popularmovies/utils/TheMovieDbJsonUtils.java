@@ -13,8 +13,6 @@ import java.util.Calendar;
 public class TheMovieDbJsonUtils {
 
     public static Movie[] getMoviesDbFromJson(String jsonMoviesResponse) throws JSONException {
-        Movie[] parsedMovieData = null;
-
         final String MDB_RESULTS = "results";
         final String MDB_ID = "id";
         final String MDB_ORIGINAL_TITLE = "original_title";
@@ -23,7 +21,7 @@ public class TheMovieDbJsonUtils {
         JSONObject moviesJson = new JSONObject(jsonMoviesResponse);
 
         JSONArray moviesArray = moviesJson.getJSONArray(MDB_RESULTS);
-        parsedMovieData = new Movie[moviesArray.length()];
+        Movie[] parsedMovieData = new Movie[moviesArray.length()];
 
         for (int i = 0; i < moviesArray.length(); i++) {
             JSONObject movie = moviesArray.getJSONObject(i);
@@ -39,8 +37,6 @@ public class TheMovieDbJsonUtils {
     }
 
     public static MovieDetail getMovieDetailFromJson(String jsonMovieDetailResponse) throws JSONException {
-        JSONObject movie = new JSONObject(jsonMovieDetailResponse);
-
         final String MDB_ID = "id";
         final String MDB_ORIGINAL_TITLE = "original_title";
         final String MDB_POSTER_PATH = "poster_path";
@@ -50,6 +46,7 @@ public class TheMovieDbJsonUtils {
         final String MDB_VOTE_COUNT = "vote_count";
         final String MDB_RELEASE_DATE = "release_date";
 
+        JSONObject movie = new JSONObject(jsonMovieDetailResponse);
 
         long id = movie.getLong(MDB_ID);
         String originalTitle = movie.getString(MDB_ORIGINAL_TITLE);
@@ -73,8 +70,6 @@ public class TheMovieDbJsonUtils {
     }
 
     public static Trailer[] getTrailersKeysFromJson(String jsonTrailersResponse) throws JSONException {
-        Trailer[] parsedTrailerData = null;
-
         final String MDB_RESULTS = "results";
         final String MDB_NAME = "name";
         final String MDB_KEY = "key";
@@ -82,7 +77,7 @@ public class TheMovieDbJsonUtils {
         JSONObject railersJson = new JSONObject(jsonTrailersResponse);
 
         JSONArray trailersArray = railersJson.getJSONArray(MDB_RESULTS);
-        parsedTrailerData = new Trailer[trailersArray.length()];
+        Trailer[] parsedTrailerData = new Trailer[trailersArray.length()];
 
         for (int i = 0; i < trailersArray.length(); i++) {
             JSONObject trailer = trailersArray.getJSONObject(i);

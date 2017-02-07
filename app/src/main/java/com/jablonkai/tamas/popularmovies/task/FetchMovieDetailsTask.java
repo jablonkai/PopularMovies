@@ -1,6 +1,8 @@
 package com.jablonkai.tamas.popularmovies.task;
 
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.jablonkai.tamas.popularmovies.data.MovieDetail;
 import com.jablonkai.tamas.popularmovies.utils.NetworkUtils;
@@ -11,13 +13,22 @@ import java.net.URL;
 public class FetchMovieDetailsTask extends AsyncTask<Long, Void, MovieDetail> {
 
     private FetchMovieDetailsInterface mFetchMovieDetailsInterface;
+    private ProgressBar mLoadingIndicator;
 
     public interface FetchMovieDetailsInterface{
         void showMovieDetail(MovieDetail movieDetail);
+        void showErrorMessage();
     }
 
-    public FetchMovieDetailsTask(FetchMovieDetailsTask.FetchMovieDetailsInterface fetchMovieDetailsInterface) {
+    public FetchMovieDetailsTask(FetchMovieDetailsTask.FetchMovieDetailsInterface fetchMovieDetailsInterface, ProgressBar progressBar) {
         mFetchMovieDetailsInterface = fetchMovieDetailsInterface;
+        mLoadingIndicator = progressBar;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -40,8 +51,11 @@ public class FetchMovieDetailsTask extends AsyncTask<Long, Void, MovieDetail> {
 
     @Override
     protected void onPostExecute(MovieDetail movieDetail) {
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
         if (movieDetail != null) {
             mFetchMovieDetailsInterface.showMovieDetail(movieDetail);
+        } else {
+            mFetchMovieDetailsInterface.showErrorMessage();
         }
     }
 }

@@ -11,6 +11,8 @@ public class MovieDetail {
     private long voteCount;
     private long releaseDate;
 
+    // TODO: plusz adatok: stílus, ország, rendező, színészek, imdb értékelés, imdb, készítő cégek, link megnyitás (weblap, imdb), hossz, eredeti nyelv
+
     public MovieDetail(long id, String originalTitle, String posterPath, String backdropPath,
                        String overview, double voteAverage, long voteCount, long releaseDate) {
         this.id = id;

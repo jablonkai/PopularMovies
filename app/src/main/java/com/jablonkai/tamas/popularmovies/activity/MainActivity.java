@@ -1,4 +1,4 @@
-package com.jablonkai.tamas.popularmovies;
+package com.jablonkai.tamas.popularmovies.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.jablonkai.tamas.popularmovies.R;
 import com.jablonkai.tamas.popularmovies.adapter.MoviePosterAdapter;
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.task.FetchMoviesTask;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     @BindString(R.string.main_activity_title_popular) String mTitlePopular;
     @BindString(R.string.main_activity_rate) String mTitleVote;
 
-    MoviePosterAdapter mMovieAdapter;
+    private MoviePosterAdapter mMovieAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setTitle(mTitlePopular);
 
+        // TODO: check and correct
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_PORTRAIT)
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadMoviePosters() {
         showMoviePostersView();
+        // TODO: több mint egy oldal betöltése
         new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_POPULAR);
     }
 
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO: újrarendezésnél első sorba ugorjon
         switch (item.getItemId()) {
             case R.id.action_sort_popular:
                 showMoviePostersView();

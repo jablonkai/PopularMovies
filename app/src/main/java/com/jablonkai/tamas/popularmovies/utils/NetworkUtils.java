@@ -15,12 +15,15 @@ public class NetworkUtils {
 
     private static final String THEMOVIEDB_ORG_BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String THEMOVIEDB_ORG_POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
+    private static final String YOUTUBE_POSTER_BASE_URL = "https://img.youtube.com/vi/";
+    private static final String YOUTUBE_VIDEO_BASE_URL = "https://www.youtube.com/watch";
 
     private static final String PATH_VIDEOS = "videos";
-
     private static final String API_PARAM = "api_key";
-
     private static final String SIZE_PATH = "w342";
+
+    private static final String YOUTUBE_IMAGE = "0.jpg";
+    private static final String VIDEO_PARAM = "v";
 
     public static URL buildUrl(String sort) {
         Uri builtUri = Uri.parse(THEMOVIEDB_ORG_BASE_URL).buildUpon()
@@ -86,6 +89,30 @@ public class NetworkUtils {
         }
 
         return  url;
+    }
+
+    public static URL buildYouTubePosterUrl(String key) {
+        Uri builtUri = Uri.parse(YOUTUBE_POSTER_BASE_URL).buildUpon()
+                .appendPath(key)
+                .appendPath(YOUTUBE_IMAGE)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return  url;
+    }
+
+    public static Uri buildYouTubeUrl(String key) {
+        Uri builtUri = Uri.parse(YOUTUBE_VIDEO_BASE_URL).buildUpon()
+                .appendQueryParameter(VIDEO_PARAM, key)
+                .build();
+
+        return builtUri;
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
