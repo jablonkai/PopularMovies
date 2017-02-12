@@ -1,7 +1,5 @@
 package com.jablonkai.tamas.popularmovies.utils;
 
-import android.util.Log;
-
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.data.MovieDetail;
 import com.jablonkai.tamas.popularmovies.data.Review;
@@ -43,7 +41,6 @@ public class TheMovieDbJsonUtils {
         final String MDB_ID = "id";
         final String MDB_ORIGINAL_TITLE = "original_title";
         final String MDB_POSTER_PATH = "poster_path";
-        final String MDB_BACKDROP_PATH = "backdrop_path";
         final String MDB_OVERVIEW = "overview";
         final String MDB_VOTE_AVERAGE = "vote_average";
         final String MDB_VOTE_COUNT = "vote_count";
@@ -54,7 +51,6 @@ public class TheMovieDbJsonUtils {
         long id = movie.getLong(MDB_ID);
         String originalTitle = movie.getString(MDB_ORIGINAL_TITLE);
         String moviePoster = movie.getString(MDB_POSTER_PATH).replace("/", "");
-        String backdropPath = movie.getString(MDB_BACKDROP_PATH).replace("/", "");
         String overview = movie.getString(MDB_OVERVIEW);
         double vote = movie.getDouble(MDB_VOTE_AVERAGE);
         long voteCount = movie.getLong(MDB_VOTE_COUNT);
@@ -69,7 +65,7 @@ public class TheMovieDbJsonUtils {
         cal.set(year, month, date);
         long longDate = cal.getTimeInMillis();
 
-        return new MovieDetail(id, originalTitle, moviePoster, backdropPath, overview, vote, voteCount, longDate);
+        return new MovieDetail(id, originalTitle, moviePoster, overview, vote, voteCount, longDate);
     }
 
     public static Trailer[] getTrailersDbFromJson(String jsonTrailersResponse) throws JSONException {

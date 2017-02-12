@@ -2,6 +2,7 @@ package com.jablonkai.tamas.popularmovies.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.jablonkai.tamas.popularmovies.R;
 import com.jablonkai.tamas.popularmovies.adapter.MoviePosterAdapter;
+import com.jablonkai.tamas.popularmovies.data.FavoriteMoviesContract;
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.task.FetchMoviesTask;
 
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity
     private static String MDB_SORT_POPULAR = "popular";
     private static String MDB_SORT_TOP_RATED = "top_rated";
 
+    private static int SORT_BY_POPULAR = 1;
+    private static int SORT_BY_VOTES = 2;
+    private static int SORT_BY_FAVORITES = 3;
+
     @BindView(R.id.rv_movie_posters) RecyclerView mRecyclerView;
     @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     @BindString(R.string.main_activity_favorites) String mTitleFavorites;
 
     private MoviePosterAdapter mMovieAdapter;
+    private int mSortBy = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +52,6 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setTitle(mTitlePopular);
 
-        // TODO: check and correct
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_PORTRAIT)
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -55,27 +61,28 @@ public class MainActivity extends AppCompatActivity
         mMovieAdapter = new MoviePosterAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        loadMoviePosters();
+        if (savedInstanceState != null) {
+            Parcelable listState = savedInstanceState.getParcelable("RECYLCE_VIEW");
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+
+            mSortBy = savedInstanceState.getInt("SORT_BY");
+            if (mSortBy == SORT_BY_POPULAR) {
+                sortPopular();
+            } else if (mSortBy == SORT_BY_VOTES) {
+                sortVotes();
+            } else if (mSortBy == SORT_BY_FAVORITES) {
+                sortFavorites();
+            }
+        } else {
+            sortPopular();
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("RECYLCE_VIEW", mRecyclerView.getLayoutManager().onSaveInstanceState());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        Parcelable listState = savedInstanceState.getParcelable("RECYLCE_VIEW");
-        mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
-    }
-
-    private void loadMoviePosters() {
-        showMoviePostersView();
-        // TODO: több mint egy oldal betöltése
-        new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_POPULAR);
+        outState.putInt("SORT_BY", mSortBy);
     }
 
     public void showMoviePostersView() {
@@ -106,30 +113,64 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: újrarendezésnél első sorba ugorjon
         switch (item.getItemId()) {
             case R.id.action_sort_popular:
-                showMoviePostersView();
-                setTitle(mTitlePopular);
-                new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_POPULAR);
+                sortPopular();
                 return true;
 
             case R.id.action_sort_rated:
-                showMoviePostersView();
-                setTitle(mTitleVote);
-                new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_TOP_RATED);
+                sortVotes();
                 return true;
 
             case R.id.action_sort_favorites:
-                showMoviePostersView();
-                setTitle(mTitleFavorites);
-
-
-
-
+                sortFavorites();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sortPopular() {
+        showMoviePostersView();
+        setTitle(mTitlePopular);
+        new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_POPULAR);
+        mRecyclerView.scrollToPosition(0);
+        mSortBy = SORT_BY_POPULAR;
+    }
+
+    private void sortVotes() {
+        showMoviePostersView();
+        setTitle(mTitleVote);
+        new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_TOP_RATED);
+        mRecyclerView.scrollToPosition(0);
+        mSortBy = SORT_BY_VOTES;
+    }
+
+    private void sortFavorites() {
+        showMoviePostersView();
+        setTitle(mTitleFavorites);
+
+        String sortOrder = FavoriteMoviesContract.FavoriteMovieEntry.ORIGINAL_TITLE + " COLLATE LOCALIZED ASC";
+        Cursor cursor = getContentResolver().query(FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI,
+                null, null, null, sortOrder);
+
+        try {
+            Movie[] movies = new Movie[cursor.getCount()];
+
+            while (cursor.moveToNext()) {
+                movies[cursor.getPosition()] = new Movie(cursor.getLong(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMovieEntry.THEMOVIEDB_ID)),
+                        cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMovieEntry.ORIGINAL_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMovieEntry.POSTER_PATH)));
+            }
+
+            mMovieAdapter.setMoviesData(movies);
+        } catch (Exception e) {
+            mMovieAdapter.setMoviesData(null);
+        } finally {
+            cursor.close();
+        }
+
+        mSortBy = SORT_BY_FAVORITES;
+        mRecyclerView.scrollToPosition(0);
     }
 }

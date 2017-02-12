@@ -1,7 +1,6 @@
 package com.jablonkai.tamas.popularmovies.task;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.jablonkai.tamas.popularmovies.adapter.ReviewAdapter;
 import com.jablonkai.tamas.popularmovies.data.Review;
@@ -50,26 +49,3 @@ public class FetchReviewsTask extends AsyncTask<Long, Void, Review[]> {
         } // else assume there is no reviews
     }
 }
-
-/*public class FetchTrailersTask extends AsyncTask<Long, Void, Trailer[]> {
-
-    private FetchTrailersInterface mFetchTrailersInterface;
-    private TrailerAdapter mTrailerAdapter;
-
-    public interface FetchTrailersInterface{
-        void showTrailers();
-    }
-
-    public FetchTrailersTask(FetchTrailersInterface fetchTrailersInterface, TrailerAdapter trailerAdapter) {
-        mFetchTrailersInterface = fetchTrailersInterface;
-        mTrailerAdapter = trailerAdapter;
-    }
-
-    @Override
-    protected void onPostExecute(Trailer[] trailersData) {
-        if (trailersData != null) {
-            mFetchTrailersInterface.showTrailers();
-            mTrailerAdapter.setTrailersData(trailersData);
-        } // else assume there is no trailers
-    }
-}*/

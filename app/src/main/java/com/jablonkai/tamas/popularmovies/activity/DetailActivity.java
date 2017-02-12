@@ -4,12 +4,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -80,13 +78,11 @@ public class DetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
-        // TODO: címsor javítása és cover fotó hozzáadása
         setTitle(mTitle);
 
         mTrailersTextView.setVisibility(View.GONE);
         mTrailersRecyclerView.setVisibility(View.GONE);
 
-        // TODO: onSaveInstanceState
         mTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         mTrailerAdapter = new TrailerAdapter(this);
@@ -110,7 +106,6 @@ public class DetailActivity extends AppCompatActivity
 
             long movieId = mMovie.getId();
             new FetchMovieDetailsTask(this, mLoadingIndicator).execute(movieId);
-            // TODO: több oldalnyi előzetest kezelni
             new FetchTrailersTask(this, mTrailerAdapter).execute(movieId);
             new FetchReviewsTask(this, mReviewAdapter).execute(movieId);
 
@@ -226,7 +221,6 @@ public class DetailActivity extends AppCompatActivity
     public void onClick(View v) {
         Class destinationClass = ReviewActivity.class;
         Intent intentToStartDetailActivity = new Intent(this, destinationClass);
-//        intentToStartDetailActivity.putExtra("REVIEW_ADAPTER", mReviewAdapter);
         startActivity(intentToStartDetailActivity);
     }
 

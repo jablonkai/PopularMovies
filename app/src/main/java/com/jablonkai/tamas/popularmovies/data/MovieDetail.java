@@ -5,20 +5,15 @@ public class MovieDetail {
     private long id;
     private String originalTitle;
     private String posterPath;
-    private String backdropPath;
     private String overview;
     private double voteAverage;
     private long voteCount;
     private long releaseDate;
 
-    // TODO: plusz adatok: stílus, ország, rendező, színészek, imdb értékelés, imdb, készítő cégek, link megnyitás (weblap, imdb), hossz, eredeti nyelv
-
-    public MovieDetail(long id, String originalTitle, String posterPath, String backdropPath,
-                       String overview, double voteAverage, long voteCount, long releaseDate) {
+    public MovieDetail(long id, String originalTitle, String posterPath, String overview, double voteAverage, long voteCount, long releaseDate) {
         this.id = id;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
-        this.backdropPath = backdropPath;
         this.overview = overview;
         this.voteAverage = voteAverage;
         this.voteCount = voteCount;
@@ -47,14 +42,6 @@ public class MovieDetail {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
     }
 
     public String getOverview() {

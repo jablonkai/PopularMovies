@@ -69,7 +69,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     public void onBindViewHolder(TrailerAdapterViewHolder holder, int position) {
         URL url = NetworkUtils.buildYouTubePosterUrl(mTrailersData[position].getKey());
 
-        // TODO: add play icon to video posters
         Picasso.with(holder.itemView.getContext())
                 .load(String.valueOf(url))
                 .placeholder(holder.mPlaceholderDrawable)

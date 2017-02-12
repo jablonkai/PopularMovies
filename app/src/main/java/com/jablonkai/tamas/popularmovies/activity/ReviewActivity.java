@@ -26,7 +26,6 @@ public class ReviewActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setTitle(mTitle);
 
-        // TODO: több oldalnyi review megjelenítése
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(DetailActivity.getReviewAdapter());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));

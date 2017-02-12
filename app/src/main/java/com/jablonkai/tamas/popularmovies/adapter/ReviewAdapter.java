@@ -2,7 +2,6 @@ package com.jablonkai.tamas.popularmovies.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,26 +26,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
             super(view);
             ButterKnife.bind(this, view);
         }
-
-/*        @BindView(R.id.iv_trailer_poster) ImageView mPosterImageView;
-        @BindView(R.id.tv_trailer) TextView mTitle;
-        @BindDrawable(R.drawable.placeholder) Drawable mPlaceholderDrawable;
-        @BindDrawable(R.drawable.error) Drawable mErrorDrawable;
-
-        public TrailerAdapterViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(mTrailersData[adapterPosition]);
-        }
-  */  }
-
+    }
 
     @Override
     public ReviewAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -81,41 +61,3 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewAdap
         notifyDataSetChanged();
     }
 }
-
-
-/*public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder> {
-
-    private Trailer[] mTrailersData;
-    private final TrailerAdapterClickHandler mClickHandler;
-
-    public interface TrailerAdapterClickHandler {
-        void onClick(Trailer trailer);
-    }
-
-    public class TrailerAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
-
-        @BindView(R.id.iv_trailer_poster) ImageView mPosterImageView;
-        @BindView(R.id.tv_trailer) TextView mTitle;
-        @BindDrawable(R.drawable.placeholder) Drawable mPlaceholderDrawable;
-        @BindDrawable(R.drawable.error) Drawable mErrorDrawable;
-
-        public TrailerAdapterViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(mTrailersData[adapterPosition]);
-        }
-    }
-
-    public TrailerAdapter(TrailerAdapterClickHandler clickHandler) {
-        mClickHandler = clickHandler;
-    }
-
-
-}*/
