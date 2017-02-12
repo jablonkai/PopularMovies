@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,7 +47,8 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity
         implements FetchTrailersTask.FetchTrailersInterface, FetchMovieDetailsTask.FetchMovieDetailsInterface,
-        TrailerAdapter.TrailerAdapterClickHandler, FetchReviewsTask.FetchReviewsInterface {
+        TrailerAdapter.TrailerAdapterClickHandler, FetchReviewsTask.FetchReviewsInterface,
+        View.OnClickListener {
 
     @BindView(R.id.tv_title) TextView mTitleTextView;
     @BindView(R.id.iv_movie_poster) ImageView mPosterImageView;
@@ -60,6 +62,7 @@ public class DetailActivity extends AppCompatActivity
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
     @BindView(R.id.ll_detail) LinearLayout mDetailLinearLayout;
     @BindView(R.id.tv_reviews) TextView mReviewTextView;
+    @BindView(R.id.reviews_more) Button mMoreReviewsButton;
     @BindViews({R.id.tv_reviewer1, R.id.tv_reviewer2, R.id.tv_reviewer3}) List<TextView> mReviewersTextViewList;
     @BindViews({R.id.tv_review1, R.id.tv_review2, R.id.tv_review3}) List<TextView> mReviewsTextViewList;
     @BindString(R.string.detail_activity_title) String mTitle;
@@ -68,7 +71,7 @@ public class DetailActivity extends AppCompatActivity
 
     private MovieDetail mMovieDetail = null;
     private TrailerAdapter mTrailerAdapter;
-    private ReviewAdapter mReviewAdapter;
+    private static ReviewAdapter mReviewAdapter;
     private boolean isFavorite = false;
 
     @Override
@@ -117,6 +120,8 @@ public class DetailActivity extends AppCompatActivity
             if (cursor.getCount() == 1)
                 isFavorite = true;
         }
+
+        mMoreReviewsButton.setOnClickListener(this);
     }
 
     @Override
@@ -196,26 +201,36 @@ public class DetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(Trailer trailer) {
+    public void onTrailerClick(Trailer trailer) {
         startActivity(new Intent(Intent.ACTION_VIEW, NetworkUtils.buildYouTubeUrl(trailer.getKey())));
     }
 
     @Override
     public void showReviews() {
-        Log.d("loging loging loging", "started show reviews......");
+        int maxI = Math.min(3, mReviewAdapter.getItemCount());
 
-        int maxI = Math.min(2, mReviewAdapter.getItemCount());
-        Log.d("loging loging loging", "reviews count: " + mReviewAdapter.getItemCount());
-
-        if (maxI > 0)
+        if (maxI > 0) {
             mReviewTextView.setVisibility(View.VISIBLE);
+            mMoreReviewsButton.setVisibility(View.VISIBLE);
 
-        for (int i = 0; i < maxI; i++) {
-            Log.d("loging loging loging", "actual i: " + i);
-            mReviewersTextViewList.get(i).setVisibility(View.VISIBLE);
-            mReviewsTextViewList.get(i).setVisibility(View.VISIBLE);
-            mReviewersTextViewList.get(i).setText(mReviewAdapter.getItemAt(i).getAuthor());
-            mReviewsTextViewList.get(i).setText(mReviewAdapter.getItemAt(i).getContent());
+            for (int i = 0; i < maxI; i++) {
+                mReviewersTextViewList.get(i).setVisibility(View.VISIBLE);
+                mReviewsTextViewList.get(i).setVisibility(View.VISIBLE);
+                mReviewersTextViewList.get(i).setText(mReviewAdapter.getItemAt(i).getAuthor());
+                mReviewsTextViewList.get(i).setText(mReviewAdapter.getItemAt(i).getContent());
+            }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Class destinationClass = ReviewActivity.class;
+        Intent intentToStartDetailActivity = new Intent(this, destinationClass);
+//        intentToStartDetailActivity.putExtra("REVIEW_ADAPTER", mReviewAdapter);
+        startActivity(intentToStartDetailActivity);
+    }
+
+    public static ReviewAdapter getReviewAdapter() {
+        return mReviewAdapter;
     }
 }

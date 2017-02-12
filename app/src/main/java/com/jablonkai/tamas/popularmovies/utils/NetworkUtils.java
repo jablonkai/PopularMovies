@@ -1,6 +1,7 @@
 package com.jablonkai.tamas.popularmovies.utils;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.jablonkai.tamas.popularmovies.BuildConfig;
 

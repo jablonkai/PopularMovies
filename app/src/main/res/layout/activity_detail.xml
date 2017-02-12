@@ -121,15 +121,36 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <TextView
-            android:id="@+id/tv_reviews"
-            android:text="@string/tv_reviews"
-            android:textSize="@dimen/movie_subcat_size"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/detail_margin_top"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/detail_margin_top">
+
+                <TextView
+                    android:id="@+id/tv_reviews"
+                    android:text="@string/tv_reviews"
+                    android:textSize="@dimen/movie_subcat_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/reviews_more"
+                    android:text="@string/reviews_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    tools:visibility="visible" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_marginTop="@dimen/detail_margin_top"

@@ -1,5 +1,7 @@
 package com.jablonkai.tamas.popularmovies.utils;
 
+import android.util.Log;
+
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.data.MovieDetail;
 import com.jablonkai.tamas.popularmovies.data.Review;

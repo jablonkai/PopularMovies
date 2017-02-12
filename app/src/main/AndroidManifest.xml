@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.DetailActivity"></activity>
+        <activity android:name=".activity.ReviewActivity"></activity>
 
         <provider
             android:name=".data.FavoriteMoviesProvider"

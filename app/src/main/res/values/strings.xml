@@ -14,4 +14,6 @@
     <string name="action_sort_favorites">Favorites</string>
     <string name="main_activity_favorites">Favorites</string>
     <string name="action_favorite">Favorite</string>
+    <string name="reviews_more">More</string>
+    <string name="review_activity_title">Reviews</string>
 </resources>

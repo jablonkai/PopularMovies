@@ -1,6 +1,7 @@
 package com.jablonkai.tamas.popularmovies.task;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.jablonkai.tamas.popularmovies.adapter.ReviewAdapter;
 import com.jablonkai.tamas.popularmovies.data.Review;
@@ -44,8 +45,8 @@ public class FetchReviewsTask extends AsyncTask<Long, Void, Review[]> {
     @Override
     protected void onPostExecute(Review[] reviews) {
         if (reviews != null && reviews.length > 0) {
-            mFetchReviewsInterface.showReviews();
             mReviewAdapter.setReviewsData(reviews);
+            mFetchReviewsInterface.showReviews();
         } // else assume there is no reviews
     }
 }

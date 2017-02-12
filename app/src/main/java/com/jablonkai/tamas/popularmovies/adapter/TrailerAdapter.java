@@ -27,7 +27,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     private final TrailerAdapterClickHandler mClickHandler;
 
     public interface TrailerAdapterClickHandler {
-        void onClick(Trailer trailer);
+        void onTrailerClick(Trailer trailer);
     }
 
     public class TrailerAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
@@ -47,7 +47,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(mTrailersData[adapterPosition]);
+            mClickHandler.onTrailerClick(mTrailersData[adapterPosition]);
         }
     }
 
