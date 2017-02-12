@@ -21,6 +21,7 @@ public class FavoriteMoviesContract {
 
         public static final String TABLE_NAME = "favorite_movies";
 
+        public static final String THEMOVIEDB_ID = "themoviedb_id";
         public static final String ORIGINAL_TITLE = "original_title";
         public static final String POSTER_PATH = "poster_path";
         public static final String OVERVIEW = "overview";

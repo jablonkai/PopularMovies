@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
     @BindString(R.string.main_activity_title_popular) String mTitlePopular;
     @BindString(R.string.main_activity_rate) String mTitleVote;
+    @BindString(R.string.main_activity_favorites) String mTitleFavorites;
 
     private MoviePosterAdapter mMovieAdapter;
 
@@ -117,6 +118,15 @@ public class MainActivity extends AppCompatActivity
                 showMoviePostersView();
                 setTitle(mTitleVote);
                 new FetchMoviesTask(this, mLoadingIndicator, mMovieAdapter).execute(MDB_SORT_TOP_RATED);
+                return true;
+
+            case R.id.action_sort_favorites:
+                showMoviePostersView();
+                setTitle(mTitleFavorites);
+
+
+
+
                 return true;
         }
 

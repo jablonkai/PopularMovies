@@ -15,10 +15,12 @@ public class NetworkUtils {
 
     private static final String THEMOVIEDB_ORG_BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String THEMOVIEDB_ORG_POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
+
     private static final String YOUTUBE_POSTER_BASE_URL = "https://img.youtube.com/vi/";
     private static final String YOUTUBE_VIDEO_BASE_URL = "https://www.youtube.com/watch";
 
     private static final String PATH_VIDEOS = "videos";
+    private static final String PATH_REVIEWS = "reviews";
     private static final String API_PARAM = "api_key";
     private static final String SIZE_PATH = "w342";
 
@@ -61,6 +63,24 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(THEMOVIEDB_ORG_BASE_URL).buildUpon()
                 .appendPath(Long.toString(movieId))
                 .appendPath(PATH_VIDEOS)
+                .appendQueryParameter(API_PARAM, BuildConfig.MOVIEDB_ORG_API_KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+
+    public static URL buildReviewsUrl(long movieId) {
+        Uri builtUri = Uri.parse(THEMOVIEDB_ORG_BASE_URL).buildUpon()
+                .appendPath(Long.toString(movieId))
+                .appendPath(PATH_REVIEWS)
                 .appendQueryParameter(API_PARAM, BuildConfig.MOVIEDB_ORG_API_KEY)
                 .build();
 

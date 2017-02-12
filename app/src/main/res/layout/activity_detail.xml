@@ -34,12 +34,15 @@
                 android:layout_weight="1"/>
 
             <LinearLayout
+                android:id="@+id/ll_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/detail_margin_info"
                 android:layout_marginTop="@dimen/detail_margin_top"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
                     android:id="@+id/tv_release_date_text"
@@ -78,16 +81,17 @@
                     android:visibility="gone"
                     android:layout_centerHorizontal="true"/>
 
-                <ProgressBar
-                    android:id="@+id/pb_loading_indicator"
-                    android:layout_height="@dimen/progress_bar_size"
-                    android:layout_width="@dimen/progress_bar_size"
-                    android:visibility="invisible"
-                    tools:visibility="visible"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true" />
-
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pb_loading_indicator"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                android:layout_weight="1"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
 
         </LinearLayout>
 
@@ -127,14 +131,66 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_reviews"
+        <TextView
+            android:layout_marginTop="@dimen/detail_margin_top"
+            android:id="@+id/tv_reviewer1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/detail_margin_top"
+            android:textStyle="bold"
+            android:padding="2dp"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            tools:text="Reviewer" />
+
+        <TextView
+            android:id="@+id/tv_review1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="2dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="review review review review review review review review review review review review review review review review review review review review review review review review review review review " />
+
+        <TextView
+            android:id="@+id/tv_reviewer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Reviewer" />
+
+        <TextView
+            android:id="@+id/tv_review2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="2dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="review review review review review review review review review review review review review review review review review review review review review review review review review review review " />
+
+        <TextView
+            android:id="@+id/tv_reviewer3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Reviewer" />
+
+        <TextView
+            android:id="@+id/tv_review3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="2dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="review review review review review review review review review review review review review review review review review review review review review review review review review review review " />
 
     </LinearLayout>
 

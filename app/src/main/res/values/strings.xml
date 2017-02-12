@@ -11,4 +11,7 @@
     <string name="content_authority">com.jablonkai.tamas.popularmovies</string>
     <string name="tv_trailers">Trailers</string>
     <string name="tv_reviews">Reviews</string>
+    <string name="action_sort_favorites">Favorites</string>
+    <string name="main_activity_favorites">Favorites</string>
+    <string name="action_favorite">Favorite</string>
 </resources>

@@ -1,23 +1,33 @@
 package com.jablonkai.tamas.popularmovies.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jablonkai.tamas.popularmovies.R;
+import com.jablonkai.tamas.popularmovies.adapter.ReviewAdapter;
 import com.jablonkai.tamas.popularmovies.adapter.TrailerAdapter;
+import com.jablonkai.tamas.popularmovies.data.FavoriteMoviesContract;
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.data.MovieDetail;
 import com.jablonkai.tamas.popularmovies.data.Trailer;
 import com.jablonkai.tamas.popularmovies.task.FetchMovieDetailsTask;
+import com.jablonkai.tamas.popularmovies.task.FetchReviewsTask;
 import com.jablonkai.tamas.popularmovies.task.FetchTrailersTask;
 import com.jablonkai.tamas.popularmovies.utils.NetworkUtils;
 
@@ -26,20 +36,20 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity
         implements FetchTrailersTask.FetchTrailersInterface, FetchMovieDetailsTask.FetchMovieDetailsInterface,
-        TrailerAdapter.TrailerAdapterClickHandler {
+        TrailerAdapter.TrailerAdapterClickHandler, FetchReviewsTask.FetchReviewsInterface {
 
-    //@BindView(R.id.iv_cover_image) ImageView mCoverImageView;
     @BindView(R.id.tv_title) TextView mTitleTextView;
     @BindView(R.id.iv_movie_poster) ImageView mPosterImageView;
-    @BindView(R.id.tv_release_date_text) TextView mReleaseDateTextTextView;
     @BindView(R.id.tv_release_date) TextView mReleaseDateTextView;
     @BindView(R.id.tv_average_vote) TextView mVoteTextView;
     @BindView(R.id.tv_vote_count) TextView mVoteCountTextView;
@@ -48,12 +58,18 @@ public class DetailActivity extends AppCompatActivity
     @BindView(R.id.tv_trailers) TextView mTrailersTextView;
     @BindView(R.id.rv_trailers) RecyclerView mTrailersRecyclerView;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+    @BindView(R.id.ll_detail) LinearLayout mDetailLinearLayout;
+    @BindView(R.id.tv_reviews) TextView mReviewTextView;
+    @BindViews({R.id.tv_reviewer1, R.id.tv_reviewer2, R.id.tv_reviewer3}) List<TextView> mReviewersTextViewList;
+    @BindViews({R.id.tv_review1, R.id.tv_review2, R.id.tv_review3}) List<TextView> mReviewsTextViewList;
     @BindString(R.string.detail_activity_title) String mTitle;
     @BindDrawable(R.drawable.placeholder) Drawable mPlaceholderDrawable;
     @BindDrawable(R.drawable.error) Drawable mErrorDrawable;
 
     private MovieDetail mMovieDetail = null;
     private TrailerAdapter mTrailerAdapter;
+    private ReviewAdapter mReviewAdapter;
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +80,16 @@ public class DetailActivity extends AppCompatActivity
         // TODO: címsor javítása és cover fotó hozzáadása
         setTitle(mTitle);
 
+        mTrailersTextView.setVisibility(View.GONE);
+        mTrailersRecyclerView.setVisibility(View.GONE);
+
         // TODO: onSaveInstanceState
         mTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         mTrailerAdapter = new TrailerAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
+
+        mReviewAdapter = new ReviewAdapter();
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -86,15 +107,59 @@ public class DetailActivity extends AppCompatActivity
 
             long movieId = mMovie.getId();
             new FetchMovieDetailsTask(this, mLoadingIndicator).execute(movieId);
+            // TODO: több oldalnyi előzetest kezelni
             new FetchTrailersTask(this, mTrailerAdapter).execute(movieId);
+            new FetchReviewsTask(this, mReviewAdapter).execute(movieId);
+
+            Cursor cursor = getContentResolver().query(FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI,
+                    null, FavoriteMoviesContract.FavoriteMovieEntry.THEMOVIEDB_ID + " = " + movieId, null, null);
+
+            if (cursor.getCount() == 1)
+                isFavorite = true;
         }
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.detail, menu);
+
+        if (isFavorite)
+            menu.findItem(R.id.action_favorite).setIcon(R.drawable.ic_star_white_24dp);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                if (isFavorite) {
+                    getContentResolver().delete(FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI,
+                            FavoriteMoviesContract.FavoriteMovieEntry.THEMOVIEDB_ID + " = " + mMovieDetail.getId(), null);
+
+                    item.setIcon(R.drawable.ic_star_border_white_24dp);
+                } else {
+                    ContentValues contentValues = new ContentValues();
+
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.THEMOVIEDB_ID, mMovieDetail.getId());
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.ORIGINAL_TITLE, mMovieDetail.getOriginalTitle());
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.POSTER_PATH, mMovieDetail.getPosterPath());
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.OVERVIEW, mMovieDetail.getOverview());
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.VOTE_AVERAGE, mMovieDetail.getVoteAverage());
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.VOTE_COUNT, mMovieDetail.getVoteCount());
+                    contentValues.put(FavoriteMoviesContract.FavoriteMovieEntry.RELEASE_DATE, mMovieDetail.getReleaseDate());
+
+                    getContentResolver().insert(FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI, contentValues);
+                    item.setIcon(R.drawable.ic_star_white_24dp);
+                }
+
+                isFavorite = !isFavorite;
+                return true;
+
+            case android.R.id.home:
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -107,23 +172,11 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public void showMovieDetail(MovieDetail movieDetail) {
-/*            final URL backdropUrl = NetworkUtils.buildBackdropPath(mMovie.getBackdropPath());
-            Picasso.with(getParent())
-                    .load(String.valueOf(backdropUrl))
-                    .placeholder(mPlaceholderDrawable)
-                    .error(mErrorDrawable)
-                    .into(mCoverImageView);*/
         mMovieDetail = movieDetail;
-/*
-        mReleaseDateTextTextView.setVisibility(View.VISIBLE);
-        mReleaseDateTextView.setVisibility(View.VISIBLE);
-        mVoteTextView.setVisibility(View.VISIBLE);
-        mVoteCountTextView.setVisibility(View.VISIBLE);
-        mOverviewTextView.setVisibility(View.VISIBLE);
-*/
-        mReleaseDateTextTextView.setVisibility(View.VISIBLE);
 
-//        mTitleTextView.setText(mMovie.getOriginalTitle());
+        mLoadingIndicator.setVisibility(View.GONE);
+        mDetailLinearLayout.setVisibility(View.VISIBLE);
+
         mReleaseDateTextView.setText(localDateFromLong(mMovieDetail.getReleaseDate()));
         mVoteTextView.setText(mMovieDetail.getVoteAverage() + "/10");
         mVoteCountTextView.setText(Long.toString(mMovieDetail.getVoteCount()));
@@ -132,11 +185,7 @@ public class DetailActivity extends AppCompatActivity
 
     @Override
     public void showErrorMessage() {
-        mReleaseDateTextTextView.setVisibility(View.GONE);
-        mReleaseDateTextView.setVisibility(View.GONE);
-        mVoteTextView.setVisibility(View.GONE);
-        mVoteCountTextView.setVisibility(View.GONE);
-        mOverviewTextView.setVisibility(View.GONE);
+        mDetailLinearLayout.setVisibility(View.GONE);
         mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
@@ -149,5 +198,24 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onClick(Trailer trailer) {
         startActivity(new Intent(Intent.ACTION_VIEW, NetworkUtils.buildYouTubeUrl(trailer.getKey())));
+    }
+
+    @Override
+    public void showReviews() {
+        Log.d("loging loging loging", "started show reviews......");
+
+        int maxI = Math.min(2, mReviewAdapter.getItemCount());
+        Log.d("loging loging loging", "reviews count: " + mReviewAdapter.getItemCount());
+
+        if (maxI > 0)
+            mReviewTextView.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < maxI; i++) {
+            Log.d("loging loging loging", "actual i: " + i);
+            mReviewersTextViewList.get(i).setVisibility(View.VISIBLE);
+            mReviewsTextViewList.get(i).setVisibility(View.VISIBLE);
+            mReviewersTextViewList.get(i).setText(mReviewAdapter.getItemAt(i).getAuthor());
+            mReviewsTextViewList.get(i).setText(mReviewAdapter.getItemAt(i).getContent());
+        }
     }
 }

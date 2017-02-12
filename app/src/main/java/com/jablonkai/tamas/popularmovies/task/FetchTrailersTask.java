@@ -34,7 +34,7 @@ public class FetchTrailersTask extends AsyncTask<Long, Void, Trailer[]> {
         try {
             String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(trailersRequestUrl);
 
-            return TheMovieDbJsonUtils.getTrailersKeysFromJson(jsonMoviesResponse);
+            return TheMovieDbJsonUtils.getTrailersDbFromJson(jsonMoviesResponse);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -43,7 +43,7 @@ public class FetchTrailersTask extends AsyncTask<Long, Void, Trailer[]> {
 
     @Override
     protected void onPostExecute(Trailer[] trailersData) {
-        if (trailersData != null) {
+        if (trailersData != null && trailersData.length > 0) {
             mFetchTrailersInterface.showTrailers();
             mTrailerAdapter.setTrailersData(trailersData);
         } // else assume there is no trailers

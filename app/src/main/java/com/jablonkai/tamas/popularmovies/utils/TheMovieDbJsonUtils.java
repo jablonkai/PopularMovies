@@ -2,6 +2,7 @@ package com.jablonkai.tamas.popularmovies.utils;
 
 import com.jablonkai.tamas.popularmovies.data.Movie;
 import com.jablonkai.tamas.popularmovies.data.MovieDetail;
+import com.jablonkai.tamas.popularmovies.data.Review;
 import com.jablonkai.tamas.popularmovies.data.Trailer;
 
 import org.json.JSONArray;
@@ -69,14 +70,14 @@ public class TheMovieDbJsonUtils {
         return new MovieDetail(id, originalTitle, moviePoster, backdropPath, overview, vote, voteCount, longDate);
     }
 
-    public static Trailer[] getTrailersKeysFromJson(String jsonTrailersResponse) throws JSONException {
+    public static Trailer[] getTrailersDbFromJson(String jsonTrailersResponse) throws JSONException {
         final String MDB_RESULTS = "results";
         final String MDB_NAME = "name";
         final String MDB_KEY = "key";
 
-        JSONObject railersJson = new JSONObject(jsonTrailersResponse);
+        JSONObject trailersJson = new JSONObject(jsonTrailersResponse);
 
-        JSONArray trailersArray = railersJson.getJSONArray(MDB_RESULTS);
+        JSONArray trailersArray = trailersJson.getJSONArray(MDB_RESULTS);
         Trailer[] parsedTrailerData = new Trailer[trailersArray.length()];
 
         for (int i = 0; i < trailersArray.length(); i++) {
@@ -91,7 +92,25 @@ public class TheMovieDbJsonUtils {
         return parsedTrailerData;
     }
 
-    public static Movie[] getReviesDbFromJson(String jsonMoviesResponse) throws JSONException {
-        return null;
+    public static Review[] getReviewsDbFromJson(String jsonReviewResponse) throws JSONException {
+        final String MDB_RESULTS = "results";
+        final String MDB_AUTHOR = "author";
+        final String MDB_CONTENT = "content";
+
+        JSONObject reviewsJson = new JSONObject(jsonReviewResponse);
+
+        JSONArray reviewsArray = reviewsJson.getJSONArray(MDB_RESULTS);
+        Review[] parsedReviewData = new Review[reviewsArray.length()];
+
+        for (int i = 0; i < reviewsArray.length(); i++) {
+            JSONObject review = reviewsArray.getJSONObject(i);
+
+            String author = review.getString(MDB_AUTHOR);
+            String content = review.getString(MDB_CONTENT);
+
+            parsedReviewData[i] = new Review(author, content);
+        }
+
+        return parsedReviewData;
     }
 }
